@@ -8,6 +8,8 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./presentation
     steps:
       - name: Checkout
         uses: actions/checkout@v2
