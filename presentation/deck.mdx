@@ -1,0 +1,720 @@
+import myTheme from './theme'
+import { Box } from 'theme-ui'
+import {Website } from './components.jsx'
+
+export const theme = myTheme
+
+# Wer rusted, der rostet nicht
+
+<img src={require('./static/logo.svg')} />
+
+### Armin Becher
+
+<Notes>
+
+- Name
+- Firma
+- Was mache ich derzeit
+
+</Notes>
+
+---
+
+# Inhaltsverzeichnis
+
+- Warum Rust?
+- Was ist Rust?
+- Getting Started
+- Basics
+- Projektstruktur
+- Test und Dokumentation
+- Weitere Konzepte
+- Zusammenfassung
+- Links
+
+---
+
+# Warum Rust?
+
+---
+
+## Most Loved Language 2020
+
+[stack-overflow](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages-loved)
+
+<Notes>
+
+- 2020 Go 5, C# 8
+- Seit 2016 auf platz 1 (2015 Platz 3 - Rust 15. Mai 2015 veröffentlicht. Stabile Version von Compiler und std lib, Rust 1.0)
+- Rust beliebt unter Entwicklern?
+- Warum rust?
+
+</Notes>
+
+---
+
+## Rust Jobs in Deutschland
+
+[https://stackoverflow.com/jobs](https://stackoverflow.com/jobs?q=rust&l=germany&d=20&u=Km&tl=rust)
+
+<Notes>
+
+- Kaum eine Firma sucht Rust Entwickler
+- Warum lohnt es sich trotzdem?
+    - Viele moderne Sprachfeatures
+    - Gutes Ökosystem
+    - Weniger schwierige Bugs auf lange Sicht
+
+</Notes>
+
+---
+
+# Was ist Rust
+
+"Rust is an open-source systems programming language that focuses on *speed*, *memory safety* and *parallelism*. 
+Developers are using Rust to create a wide range of new software applications, such as *game engines*, 
+*operating systems*, *file systems*, *browser components* and *simulation engines for virtual reality*."
+--[Mozialla](https://research.mozilla.org/rust/) 
+
+<Notes>
+
+- Laut Mozilla - Open Sourced rust in 2010
+- Man lernt neue Sprachkonzepte die einem Allgemein helfen können besseren Code zu schreiben
+- Systemprogrammiersprache
+  - Static Typed
+  - Unmanaged (Kein Garbage-collector)
+- Borrow checker + Ownership
+- async/await
+- Unterstützt WebAssembly
+
+</Notes>
+
+---
+
+## Vergleich
+
+
+| Sprache | Kompiliert | Generics | Paketverwaltung | Garbage Collector | Thread Safety | Raw Memory Management |
+|---------|------------|----------|-----------------|-------------------|---------------|-----------------------|
+| Rust    | ja         | ja       | ja              | nein              | ja            | ja                    |
+| C++     | ja         | ja       | nein            | nein              | nein          | ja                    |
+| Go      | ja         | nein     | jain            | ja                | nein          | nein                  |
+| Python  | nein       | nein     | ja              | ja                | nein          | nein                  |
+| C#      | ja         | ja       | ja              | ja                | nein          | nein                  |
+
+<Notes>
+
+- Nicht bewertend - Eingruppieren
+- Kompiliert nach machinen Architektur
+- Paketverwaltung go via git and 3rd party
+- Safety between threads - Fearless concurency - https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html
+- RMM=raw memory management (e.g. volatile or memory fence).
+- Viele Probleme werden während des Kombilierens gefunden
+
+</Notes>
+
+---
+
+# Getting Started
+
+---
+
+<Website name="The Book" url="https://doc.rust-lang.org/book/"></Website>
+
+<Notes>
+
+- Sehr guter Einstiegspunkt
+- Viele nützliche Informationen zum nachschlagen
+- Im Folgenden ein paar Sprachfeatures
+- Programmierkenntnisse in anderer Sprache vorausgesetzt
+
+</Notes>
+
+---
+
+## Cargo
+
+Offizieller Paketmanager für rust. 
+
+[Link zur Installation](https://www.rust-lang.org/tools/install)
+
+<Notes>
+
+- Vergleichbar 
+  - *C#*: `NuGet`/`dotnet`
+  - *pip*: *Python*
+  - *Node*: `npm`
+- Viele nützliche Informationen zum nachschlagen
+
+</Notes>
+
+---
+
+Erstelle eine neues **binary** Projekt:
+
+``` sh
+cargo new hello-world-binary --bin
+```
+
+Erstelle ein neues **library** Projekt:
+
+``` sh
+cargo new hello-world-library --lib
+```
+
+---
+
+### Kompilieren
+
+Navigiere zum root-Ordner (beinhaltet die *Cargo.toml* Datei) und führe folgenden Befehl aus:
+
+``` sh
+cargo check
+```
+
+---
+
+### Ausführen
+
+Navigiere nach *hello-world-binary* und führe folgenden Befehl aus:
+
+``` sh
+cargo run
+```
+
+---
+
+### Release
+
+Zum Kompilieren ohne debug Informationen muss das *--release* flag gesetzt werden:
+
+``` sh
+cargo build --release
+```
+
+Das releaste Artefakt ist standardgemäß im Ordner *target* zu finden:
+
+``` sh
+./target/release/hello-world
+```
+
+--- 
+
+# Demo Hello World
+
+<Notes>
+
+- Execute in demo folder
+- Neues Binary projekt erstellt
+- VS Code IDE
+- cargo build
+- cargo run
+- cargo build --release; ./target/release/hello-world
+
+</Notes>
+
+---
+
+# Basics
+
+<Notes>
+
+- Es gibt noch viel mehr. Hier nur ein paar *Highlights* der Syntax
+
+</Notes>
+
+---
+
+## Standardmäßig Imutable 
+
+Anders als bei anderen Programmiersprachen werden alle Variablen die genutzt werden als *immutable*
+definiert.
+
+``` rust
+let x = 5;
+// This does not work. The compiler will not let us do this
+// cannot assign twice to immutable variablerustc(E0384)
+let x += 3;
+```
+
+Eine Variable muss explizit mit `mut` annotiert werden, damit sie verändert werden kann:
+
+``` rust
+let mut x = 5;
+let x += 3;
+
+```
+
+<Notes>
+
+- Anders als C++ *const* wo immutable explizit ist
+- Einfacher zu sehen welche Variablen öfter gebraucht und ewentuel verändert werden
+
+</Notes>
+
+---
+
+## Match
+
+Falls es zu einer Variable mehrere Belegungsmöglichkeiten gibt, kann `match` verwendet werden, um 
+den Wert festzustellen und verschiedene Programmflüsse zu ermöglichen.
+
+Mit `match` lassen sich viele verschiedene Werte prüfen. Zum Beispiel `bool`, `enum`, `uint`... 
+
+Ein Vorteil der `match` Operation ist, dass zur Compilezeit geprüft wird, ob alle Optionen behandelt werden.
+Falls nicht, lässt sich der Code nicht kompilieren.
+
+``` rust
+let boolean = true;
+// The result of match is an expression. In this case an integer
+let binary = match boolean {
+    false => 0,
+    true => 1,
+};
+```
+
+---
+
+# Beispiel Enum-Match
+
+---
+
+## Panic und Error. No Exceptions
+
+Anders als bei anderen Programmiersprachen gibt es keine *Exceptions* mit *try-catch-Blöcken in rust.
+
+Es gibt zwei Arten von Fehler die in Rust Fehlerfälle zu behandlen: `result` und `panic`
+
+### Panic!
+
+Falls `panic` aufgerufen wird, dann gibt es kein zurück mehr. Das Programm bricht ab. Diese Art der Fehlerbehandlung
+ist hart, macht aber Beispielsweise für Prototypen und Tests Sinn, bei denen man nicht viel Zeit und 
+Mühe in eine ordentliche Fehlerbehandlung stecken möchte.
+
+```rust
+panic!("over and out");
+```
+
+Im *rust book* steht ein ganz guter Hinweis zum Thema [To panic! or Not To panic!](https://doc.rust-lang.org/book/ch09-03-to-panic-or-not-to-panic.html#to-panic-or-not-to-panic).
+
+### Result
+
+Die etwas freundlichere und für Produktivcode sicher auch empfehlenswertere Art der Fehlerbehandlung sind
+`result` typen. Im Prinzip handelt es sich dabei um einen Enum mit den zwei Varianten `Ok` und `Err`:
+
+``` rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+---
+
+Beispielsweise gibt die funktion `std::fs::File::open` ein `reult` zurück, das entweder die Datei 
+zurück gibt oder einen Fehler beim Öffnen der Datei beinhaltet:
+
+``` rust
+let f = File::open("hello.txt");
+
+let mut f = match f {
+    Ok(file) => file,
+    Err(e) => ask_for_other_file(),
+};
+```
+
+---
+
+## Kein Null sondern Options
+
+Anstatt einem wert wie *null* oder *nil*, wie es in anderen Sprachen üblich ist, werden leere Elemente 
+in rust mit `Option` enums abgebildet. Options sind sehr Ähnlich zum Result type, nur dass sie Anstelle von
+`Err` `Ok` eine Variante von `Some` und `None` erwarten:
+
+``` rust
+pub enum Option<T> {
+    None,
+    Some(T),
+}
+```
+
+Falls ein Wert als `Option` definiert ist, kann nicht direkt auf diesen zugegriffen, sondern 
+es muss erst expliziet geprüft werden, ob es sich um den Wert oder um ein `None` handelt:
+
+``` rust    
+let maybe_nothing : Option<u32> = Some(4); // print: 4
+// let maybe_nothing : Option<u32> = None; // print: :(
+match maybe_nothing {         
+    Some(v) => println!("{}", v),
+    None => println!(":(")
+}
+
+```
+
+<Notes>
+
+- Sehr ähnlich zu result, aber ohne Fehlermeldung sondern einem None
+- Vorteil: Es muss vom Programmierer explizit geprüft werden. Anders als bei *null-Werten* in anderen Sprachen
+
+</Notes>
+
+---
+
+# Projektstruktur
+
+---
+
+## Crates and Modules
+
+Größere Projekte werden in *Crates* und *Modules* verwaltet. Ein *Crate* wird in der *Cargo.toml* Datei 
+definiert und kann mehrere Module beinhalten.
+
+Ein Modul wird mit dem Keyword `mod` definiert. Hier wird ein neues submodul namens `module_a` definier:
+
+``` rust
+// src/lib.rs
+fn base_function(){}
+
+mod module_a {
+    fn function_a1(){}
+    fn function_a2(){}
+}
+```
+
+---
+
+## Private und Public
+
+Per Default sind alle Funktionen in einem Modul *private*. Erst mit dem Hinpufügen des `pub` Keywords 
+werden Funktionen als *public* deklariert und können aus anderen Modulen importiert und aufgerufen werden.
+
+
+``` rust
+// src/lib.rs
+fn base_function() {
+    module_a::function_a1();
+    // Does not compile, because function_a1 is not public!
+    module_a::function_a2();
+}
+
+mod module_a {
+    pub fn function_a1(){}
+    fn function_a2(){}
+}
+```
+
+<Notes>
+
+- Private als default
+
+</Notes>
+
+---
+
+Es ist auch möglich ein Sub-Modul in einer Anderen Datei zu definieren. Das macht größere Projekte 
+übersichtlicher. Im folgenden Beispiel werden die beiden Funktionen `function_b1` und `function_b2` im
+submodul `module_b` definiert.
+
+``` rust
+// src/module_b.rs
+pub fn function_b1(){}
+pub fn function_b2(){}
+```
+
+Um das Modul in einem andern Modul zu nutzen muss einfach nur der Pfad zur Datei angegeben werden:
+
+``` rust
+// src/lib.rs
+mod module_b;
+```
+
+---
+
+In unserem Beispiel schaut der Modulbaum wie folgt aus:
+
+```
+crate
+ └── base_function
+     ├── module_a
+     │   ├── function_a1
+     │   └── function_a2
+     └── module_b
+         └── function_b
+```
+
+In der Einstiegsdatei `lib.rs` lassen sich die Funktionen der sub-module wie folgt nutzen:
+
+``` rust
+// src/lib.rs
+pub fn base_function(){
+    module_a::function_a1();
+    module_a::function_a2();
+    module_b::function_b();
+}
+
+```
+
+## Use Keyword
+
+Damit nicht immer der gesamte Pfad zu einem Element eines Modules angegeben werden muss, können Pfade 
+auch mit Hilfe des `use` keywords importiert werden.
+
+Beispielsweise lassen sich `module_a::function_a1` importieren und die Funktion `function_a1` kann 
+dann direkt und ohne Angabe des Modulpfades aufgerufen werden:
+
+``` rust
+// src/lib.rs
+use module_a::function_a1;
+
+pub fn base_function(){
+    function_a1();
+}
+```
+
+<Notes>
+
+- Es gibt auch *Packages*, welches eine Ansammlung an *Crates* ist mehr dazu im rust book
+
+</Notes>
+
+---
+
+## Externe Bibliotheken
+
+Alle Open-Source Bibliotheken befinden sich auf [crates.io](https://crates.io/).
+
+Abhängikeiten können in der `Cargo.toml` Datei definier werden:
+
+``` toml
+[dependencies]
+ntest = "0.7.1"
+```
+
+Für Abhängikeiten wird [Semantic Versioning](https://semver.org/lang/de/) verwendet.
+
+---
+ 
+Es können auch Wildcards bei den Versionen verwendet werden. 
+Beispielsweise wird im folgenden Beispiel eine beliebige Versionen der 
+Bibliothek [wildmatch](https://crates.io/crates/wildmatch) eingebunden:
+
+``` toml
+[dependencies]
+wildmatch = "*"
+```
+
+--- 
+
+Externe *crates* können mit dem keyword `use` in einem Modul genutzt werden. 
+Der Pfad zum SubModul bzw. Funktion wird mit `::` angegeben. Zum Beispiel:
+
+``` rust
+use std::io::{stdin, stdout};
+```
+
+Hier werden die beiden Funktionen des *io crates* `stdin()` und `stdout()` eingebunden.
+
+---
+
+# Demo Dependencies
+
+<Notes>
+
+- Show dependency project with TOML file
+- Dev dependencies
+- Path from module (mod keyword)
+- Move module to different file
+- Packages = Set of Crates
+- pub and private functions
+
+</Notes>
+
+--- 
+
+# Test und Dokumentation
+
+---
+
+## Tests
+
+Cargo liefert Standardmäßig eine Testumgebung zum einfachen schreiben und Ausführen von *Unit-Tests*. 
+
+Funktionen welche mit dem Makro `#[test]` annotiert sind werden als Tests ausgeführt.
+
+``` rust
+pub fn deep_thought()->u32{
+    42
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn the_answer_is_correct() {
+        assert_eq!(deep_thought(), 42);
+    }
+}
+```
+
+Alle Unit tests eines *crates* lassen sich mit dem aufruf `cargo test` ausführen.
+
+<Notes>
+
+- #[cfg(test)] -> Kompiliere nicht für release sondern nur für tests
+- Auch Benchmarks möglich
+
+</Notes>
+
+---
+
+## Docs
+
+Für jede Bibliothek auf [crates.io](https://crates.io/) wird automatisch eine Dokumentation auf [docs.rs](https://docs.rs/) veröffentlicht.
+Code kann mit drei slashes markiert werden. Cargo erstellt daraus dann eine HTML-Dokumentation.
+
+``` rust
+/// Add two numbers and return the result
+fn add(n1: u32, n2: u32) -> u32 {
+    n1 + n2
+}
+```
+
+Die Doku für den Eigenen *crate* und alle Abhängikeiten kann mit dem folgenden Kommando erstellt werden:
+
+```sh
+cargo doc --open
+```
+
+---
+
+## Tests in Dokumentation
+
+Ein weites Feature von Rust ist es, Tests auch direkt in der Dokumentation einer Funktion zu schreiben. Der
+Vorteil ist, dass diese Tests dann teil der Dokumentation werden und dem Nutzer Beispiele an die Hand geben 
+wie sich der Code aufrufen läst. 
+
+Falls sich die Bibliothek einmal ändern sollte und auch die Tests angepasst
+werden müssen, dann fällt das sofort auf weil die Unit-Tests rot sind. Nicht funktionierenden Code-Beispiele in der Dokumentation gehören somit (hoffentlich!) der Vergangenheit an.
+
+Test können als *Markdown-Code* in der Dokumentation beschrieben werden:
+
+``` rust 
+/// Answer the meaning of life
+/// # Examples
+/// 
+/// Ask **any** question and deep thought will answer you:  
+///
+/// ```
+/// #use deep_thought::think;
+/// assert_eq!(think("How old is the universe?"), 42);
+/// ```
+fn think(_question : &str)->u32{
+    42
+}
+```
+
+---
+
+# Demo Test und Dokumentation
+
+<Notes>
+- cargo test
+- cargo doc --open
+</Notes>
+
+---
+
+
+# Weitere Konzepte
+
+---
+
+## Structs und Member Funktionen
+
+---
+
+## Traits
+
+---
+
+## Ownership und der Borrowchecker
+
+---
+
+## Lifetime
+
+---
+
+# Weitere Features
+
+- Macros and Procedural Macros
+- Unsafe
+- Traits
+- Iterators & Closures
+- Async/Await
+
+<Notes>
+
+- Nicht alles behandelt (natürlich)
+- Rustbook
+- Selbst coden
+
+</Notes>
+
+---
+
+# Zusammenfassung - Warum lohnt es sich rust anzuschauen?
+
+* Gutes Ökosystem 
+  * [cargo](https://doc.rust-lang.org/cargo/) 
+  * [crates.io](https://crates.io/)
+  * [doc.rust-lang.org](https://doc.rust-lang.org/)
+* [Hilfreiche Community](https://www.rust-lang.org/community)
+* [Gute Dokumentation](https://doc.rust-lang.org/edition-guide/introduction.html)
+* Erlernen von wichtigen Techniken die auch für andere Programmiersprachen wichtig sind (Concurrency und Borrow-Checker)
+* Viele moderene und hilfreiche Sprachfeatures
+
+---
+
+## Hilfreiche Links
+
+- [Go vs Rust](https://endler.dev/2017/go-vs-rust/)
+- [Fighting the Borrow Checker](https://m-decoster.github.io/2017/01/16/fighting-borrowchk/)
+
+---
+
+## Eigene Projekte
+
+[GitHub user becheran](https://github.com/becheran)
+
+- [mlc](https://github.com/becheran/mlc) - Command line tool zum detektieren von kaputten links in Markup-Dateien 
+- [wildmatch](https://github.com/becheran/wildmatch) - Rust library für wildcard string matching
+- [ntest](https://github.com/becheran/ntest) - Rust library mit einigen Hilfsfunktionen für rust tests. Zum Beispiel `TestCases` als prozedurale Makros
+- [gut-angebunden.de](http://gut-angebunden.de/) - Web frontend mit rust-backend
+
+<Notes>
+
+- Seit ca. 1 jahr hauptsächlich Rust
+- GutAngebunden noch nicht open Source. GTFS-Daten verarbeitung mit rust schnell und einfach paralellisierbar
+- Freue mich über Issues/Features Wishes/PullRequests
+
+</Notes>
+
+---
+
+# don't panic
+
+[https://github.com/becheran/wer-rusted-der-rostet-nicht](https://github.com/becheran/wer-rusted-der-rostet-nicht)
+
+<img src={require('./static/rustacean-flat-happy.png')} width="200" height="100"/>
+
+<Header>
+
+</Header>
+
+<Footer>
+
+Wer rusted, der rostet nicht - Armin Becher -  2020
+
+</Footer>
