@@ -30,4 +30,7 @@ jobs:
         working-directory: ${{env.working-directory}}
       - name: Publish
         run: surge ./public/
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
         working-directory: ${{env.working-directory}}
