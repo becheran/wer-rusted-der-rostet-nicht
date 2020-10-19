@@ -2,7 +2,7 @@ name: CI and CD
 
 on:
   push:
-    branches: 
+    branches:
       - master
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@master
       - name: Setup Node
         uses: actions/setup-node@v1
-        with: 
+        with:
           node-version: "10.x"
       - name: Install
         run: npm install        
@@ -23,3 +23,9 @@ jobs:
       - name: Build
         run: npm run-script build
         working-directory: ${{env.working-directory}}
+      - name: Install Surge
+        run: npm install --global surge
+      - name: Add CNAME
+        run: echo wer-rusted-der-rosted-nicht.surge.sh > ./public/CNAME
+      - name: Publish
+        run: surge ./public/
