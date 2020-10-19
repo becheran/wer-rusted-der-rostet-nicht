@@ -2,6 +2,8 @@
 
 [Developer Week 2020](https://www.developer-week.de/) in Nürnberg.
 
+[Link zur Präsentation](wer-rusted-der-rosted-nicht.surge.sh) 
+
 ## Abstract
 
 Laut einer Stack Overflow-Umfrage aus dem Jahr 2019 ist rust zum vierten mal in Folge zur beliebtesten Programmiersprache unter Softwareentwicklern gewählt worden. Warum ist das so? Was ist so besonders an rust und warum lohnt es sich, mit der Sprache vertraut zu werden, obwohl derzeit noch kaum eine Firma nach rust-Entwicklern sucht?
