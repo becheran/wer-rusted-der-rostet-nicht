@@ -588,7 +588,7 @@ cargo doc --open
 
 ---
 
-## Tests in Dokumentation
+## Tests in der Dokumentation
 
 Ein weites Feature von Rust ist es, Tests auch direkt in der Dokumentation einer Funktion zu schreiben. Der
 Vorteil ist, dass diese Tests dann teil der Dokumentation werden und dem Nutzer Beispiele an die Hand geben 
@@ -625,40 +625,184 @@ fn think(_question : &str)->u32{
 
 ---
 
+# Ownership und der Borrowchecker
 
-# Weitere Konzepte
+--- 
+
+## Speichermanagement
+
+Eines der wichtigesten Konzepte von Rust ist *Ownership*, welches das Problem der 
+Speicherfreigabe auf dem Heap löst. Grundlegend gibt es zwei sehr weit verbreitete Ansätze um 
+mit dem Problem der Speicherallozierung und Freigabe umzugehen. 
+
+1. Speicher mittels **Garbage Collection** von der Laufzeitumgebung automatisch freigeben.
+2. Die Verantwortung des Speichermanagement an den Programmierer/die Programmiererin abgeben 
+die **explizit Speicher alloziieren und freigeben** müssen.
+
+Rust bietet einen anderen neuen Lösungsansatz der sich **Ownership** nennt. 
 
 ---
 
-## Structs und Member Funktionen
+## Garbage Collection
+
+Ein Mechanismus welcher für viele Programmiersprachen (e.g. *Java*, *C#*, *Python*,...) umgesetzt ist, ist der sogenannte 
+*Garbage Collector*. Damit ist ein stück code gemeint, das zur Laufzeit prüft, ob ein Speicherbereich
+auf dem *Heap* verwendet wird und falls nicht, diese Resourcen wieder für andere Prozesse freigibt.
+
+* (+) Einfach
+* (-) Schlechtere Performance
 
 ---
 
-## Traits
+## Alloc und Free
+
+Eine andere Möglichkeit ist es, dass die Verantwortung des Speichermanagement komplett an den Entwickler/ 
+die Entwicklerin abgegeben wird. In der Programmiersprache *C* beispielsweise wird Speicher auf dem
+Heap mittels `malloc` bzw. `calloc` reserviert und muss später mittels des `free` aufrufs wieder 
+explizit freigeben werden. 
+
+Problematisch wird es, wenn vergessen wird Speicher freizugeben und immer wieder neuer Speicherplatz 
+reserviert wird (*memory leak*), oder falls versehentlich bereits freigebener Speicher erneut 
+freigeben wird (*double free*)
+
+* (+) Mehr Kontrolle -> Eventuell Performanter
+* (-) Fehleranfällig
 
 ---
 
-## Ownership und der Borrowchecker
+## Ownership
+
+Rust wird als Systemprogrammiersprache bezeichnet und bietet ähnlich wie *C++* oder *C* große 
+Freiheiten beim Speichermanagement, ohne auf Performanceeinbusende Mechanismen wie einen 
+*Garbage Collector* zu setzen.
+
+Bei Rust wird bereits beim Kompieren geprüft, ob es zu eventuellen Speicheroblemen kommt. Es müssen 
+nur drei einfache Regeln befolgt werden, damit ein Programm das Prinzpi des *Ownerships* nicht verletzt.
+Aus [dem rust Buch](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html):
+
+> - *Each value in Rust has a variable that’s called its owner.*
+> - *There can only be one owner at a time.*
+> - *When the owner goes out of scope, the value will be dropped.*
 
 ---
 
-## Lifetime
+*Each value in Rust has a variable that’s called its owner.*
+
+``` rust
+// Owner variable contains the vector parameters on the stack (len, capacity, pointer).
+// Is also responsible for the Allocated Memory on the heap.
+let owner = vec![1, 2, 3];
+```
+
+Der *Owner* einer Variable ist für den Speicherbereich auf dem Heap Zuständig.
+
+
+```
+   owner          ______ _____
+|---------|      | idx  | val |
+|ptr 0x33 |----->| 0x33 |   1 |
+|len   3  |      | 0x34 |   2 |
+|cap   3  |      | 0x35 |   2 |
+|---------|      | _____|_____|
+```
+
+---
+
+*There can only be one owner at a time.*
+
+``` rust
+let owner = vec![1, 2, 3];
+// The new owner takes the ownership away of owner. Not only will the tuple on the stack 
+// (len, capacity, pointer) be coppied to the new owner, but also the "old" owner can't 
+// access the vector element anymore. The value was *moved*.
+let new_owner = owner;
+// This does not work! The
+// println!("{}", owner[0])
+// This works just fine. new_owner now *ownes* the memory on the heap
+println!("{}", new_owner[0])
+```
+
+---
+
+*Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
+mittels der `clone()` Funktion dubliziert werden. 
+
+```
+   owner          ______ _____
+|---------|      | idx  | val |
+|ptr 0x33 |----->| 0x33 |   1 |
+|len   3  |  |   | 0x34 |   2 |
+|cap   3  |  |   | 0x35 |   2 |
+|---------|  |   | _____|_____|
+             |
+             |
+ new_owner   |
+|---------|  |
+|ptr 0x33 |--|
+|len   3  |
+|cap   3  |
+|---------|
+```
+
+Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und falls eine der beiden Variable *out-of-scope* geht, müsste der 
+Speicherbereich freigegeben werden.
+
+---
+
+### Owner
+
+*When the owner goes out of scope, the value will be dropped.*
+
+``` rust
+fn main(){
+    let owner = vec![1, 2, 3];
+    // Give ownership to print function
+    printFirst(owner);
+    // This does not work and will not compile! Memory is no longer available.
+    printFirst(owner);
+    //  error[E0382]: use of moved value: `owner`
+    // --> src/main.rs:7:16
+    //  |
+    //4 |     let owner = vec![1, 2, 3];
+    //  |         ----- move occurs because `owner` has type `std::vec::Vec<u32>`, 
+    //  |               which does not implement the `Copy` trait
+    //5 |     // Give the ownershipt to the print function
+    //6 |     printFirst(owner);
+    //  |                ----- value moved here
+    //7 |     printFirst(owner);
+    //  |                ^^^^^ value used here after move
+}
+
+fn printFirst(val : Vec<u32>){ println!("{}", val[0]); }
+```
+
+*Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
+mittels der `clone()` Funktion dubliziert werden.
 
 ---
 
 # Weitere Features
 
+- Structs und Member Funktionen
+- Traits
+- References
+- Generics
 - Macros and Procedural Macros
 - Unsafe
 - Traits
 - Iterators & Closures
 - Async/Await
+- Lifetime
+- ...
 
 <Notes>
 
+- Structs anstelle von Klassen
+- Traits anstelle von Interfaces
 - Nicht alles behandelt (natürlich)
 - Rustbook
 - Selbst coden
+- Sehr umfangreich
 
 </Notes>
 
