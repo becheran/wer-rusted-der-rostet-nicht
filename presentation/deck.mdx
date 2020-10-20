@@ -115,10 +115,6 @@ Developers are using Rust to create a wide range of new software applications, s
 
 ---
 
-# Getting Started
-
----
-
 <Website name="The Book" url="https://doc.rust-lang.org/book/"></Website>
 
 <Notes>
@@ -129,6 +125,10 @@ Developers are using Rust to create a wide range of new software applications, s
 - Programmierkenntnisse in anderer Sprache vorausgesetzt
 
 </Notes>
+
+---
+
+# Getting Started
 
 ---
 
@@ -166,17 +166,20 @@ cargo new hello-world-library --lib
 
 ### Kompilieren
 
-Navigiere zum root-Ordner (beinhaltet die *Cargo.toml* Datei) und führe folgenden Befehl aus:
-
 ``` sh
 cargo check
 ```
 
+<Notes>
+
+- Feature: Vieles zur Kopmpilierzeit geprüft
+- Oft kompilieren!
+
+</Notes>
+
 ---
 
 ### Ausführen
-
-Navigiere nach *hello-world-binary* und führe folgenden Befehl aus:
 
 ``` sh
 cargo run
@@ -185,8 +188,6 @@ cargo run
 ---
 
 ### Release
-
-Zum Kompilieren ohne debug Informationen muss das *--release* flag gesetzt werden:
 
 ``` sh
 cargo build --release
@@ -257,12 +258,20 @@ let x += 3;
 ## Match
 
 Falls es zu einer Variable mehrere Belegungsmöglichkeiten gibt, kann `match` verwendet werden, um 
-den Wert festzustellen und verschiedene Programmflüsse zu ermöglichen.
+den Wert zu prüfen.
 
-Mit `match` lassen sich viele verschiedene Werte prüfen. Zum Beispiel `bool`, `enum`, `uint`... 
+Mit `match` lassen sich viele verschiedene Werte prüfen. Zum Beispiel:
 
-Ein Vorteil der `match` Operation ist, dass zur Compilezeit geprüft wird, ob alle Optionen behandelt werden.
-Falls nicht, lässt sich der Code nicht kompilieren.
+* `bool` 
+* `enum`
+* `u32`
+* `Option`
+* `Result`
+* ...
+
+---
+
+Die `match` Operation kann auch einen Rückgabewert haben.
 
 ``` rust
 let boolean = true;
@@ -272,6 +281,11 @@ let binary = match boolean {
     true => 1,
 };
 ```
+
+---
+
+Ein weiterer Vorteil der `match` Operation ist, dass *zur Compilezeit geprüft* wird, ob alle 
+Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
 
 ---
 
