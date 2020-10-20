@@ -2,7 +2,7 @@
 
 [Developer Week 2020](https://www.developer-week.de/) in Nürnberg.
 
-[Link zur Präsentation](wer-rusted-der-rosted-nicht.surge.sh) 
+[Link zur Präsentation](http://wer-rusted-der-rostet-nicht.surge.sh)
 
 ## Abstract
 

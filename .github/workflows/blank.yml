@@ -26,7 +26,7 @@ jobs:
       - name: Install Surge
         run: npm install --global surge
       - name: Add CNAME
-        run: echo wer-rusted-der-rosted-nicht.surge.sh > ./public/CNAME
+        run: echo wer-rusted-der-rostet-nicht.surge.sh > ./public/CNAME
         working-directory: ${{env.working-directory}}
       - name: Publish
         run: surge ./public/
