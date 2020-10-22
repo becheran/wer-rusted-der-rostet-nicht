@@ -40,7 +40,7 @@ export const theme = myTheme
 
 ## Most Loved Language 2020
 
-[stack-overflow](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages-loved)
+[Stack Overflow](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages-loved)
 
 <Notes>
 
@@ -228,8 +228,7 @@ Das releaste Artefakt ist standardgemäß im Ordner *target* zu finden:
 
 ## Standardmäßig Imutable 
 
-Anders als bei anderen Programmiersprachen werden alle Variablen die genutzt werden als *immutable*
-definiert.
+Alle Variablen werden standardgemäß als *immutable* deklariert.
 
 ``` rust
 let x = 5;
@@ -284,7 +283,7 @@ let binary = match boolean {
 
 ---
 
-Ein weiterer Vorteil der `match` Operation ist, dass *zur Compilezeit geprüft* wird, ob alle 
+Ein weiterer Vorteil der `match` Operation ist, dass **zur Compilezeit geprüft** wird, ob alle 
 Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
 
 ---
@@ -293,23 +292,26 @@ Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
 
 ---
 
-## Panic und Error. No Exceptions
+## Panic und Error
 
-Anders als bei anderen Programmiersprachen gibt es keine *Exceptions* mit *try-catch-Blöcken in rust.
+Anders als bei anderen Programmiersprachen gibt es keine *Exceptions* mit *try-catch-Blöcken.
 
 Es gibt zwei Arten von Fehler die in Rust Fehlerfälle zu behandlen: `result` und `panic`
+
+---
 
 ### Panic!
 
 Falls `panic` aufgerufen wird, dann gibt es kein zurück mehr. Das Programm bricht ab. Diese Art der Fehlerbehandlung
-ist hart, macht aber Beispielsweise für Prototypen und Tests Sinn, bei denen man nicht viel Zeit und 
-Mühe in eine ordentliche Fehlerbehandlung stecken möchte.
+ist hart, macht aber Beispielsweise für Prototypen und Tests Sinn.
 
 ```rust
 panic!("over and out");
 ```
 
 Im *rust book* steht ein ganz guter Hinweis zum Thema [To panic! or Not To panic!](https://doc.rust-lang.org/book/ch09-03-to-panic-or-not-to-panic.html#to-panic-or-not-to-panic).
+
+---
 
 ### Result
 
@@ -325,8 +327,8 @@ enum Result<T, E> {
 
 ---
 
-Beispielsweise gibt die funktion `std::fs::File::open` ein `reult` zurück, das entweder die Datei 
-zurück gibt oder einen Fehler beim Öffnen der Datei beinhaltet:
+Beispielsweise gibt die Funktion `std::fs::File::open` ein `result` zurück das entweder die Datei 
+oder einen Fehler beim Öffnen der Datei beinhaltet:
 
 ``` rust
 let f = File::open("hello.txt");
@@ -342,8 +344,8 @@ let mut f = match f {
 ## Kein Null sondern Options
 
 Anstatt einem wert wie *null* oder *nil*, wie es in anderen Sprachen üblich ist, werden leere Elemente 
-in rust mit `Option` enums abgebildet. Options sind sehr Ähnlich zum Result type, nur dass sie Anstelle von
-`Err` `Ok` eine Variante von `Some` und `None` erwarten:
+ mit `Option` enums abgebildet. Options sind ähnlich wie der `result` Typ, nur dass sie Anstelle von
+`Err` bzw. `Ok` entweder `Some` oder `None` erwarten:
 
 ``` rust
 pub enum Option<T> {
@@ -351,6 +353,8 @@ pub enum Option<T> {
     Some(T),
 }
 ```
+
+---
 
 Falls ein Wert als `Option` definiert ist, kann nicht direkt auf diesen zugegriffen, sondern 
 es muss erst expliziet geprüft werden, ob es sich um den Wert oder um ein `None` handelt:
@@ -383,7 +387,7 @@ match maybe_nothing {
 Größere Projekte werden in *Crates* und *Modules* verwaltet. Ein *Crate* wird in der *Cargo.toml* Datei 
 definiert und kann mehrere Module beinhalten.
 
-Ein Modul wird mit dem Keyword `mod` definiert. Hier wird ein neues submodul namens `module_a` definier:
+Ein Modul wird mit dem Keyword `mod` definiert:
 
 ``` rust
 // src/lib.rs
@@ -399,7 +403,7 @@ mod module_a {
 
 ## Private und Public
 
-Per Default sind alle Funktionen in einem Modul *private*. Erst mit dem Hinpufügen des `pub` Keywords 
+standardgemäß sind alle Elemente in einem Modul *private*. Erst mit dem Hinpufügen des `pub`-Keywords 
 werden Funktionen als *public* deklariert und können aus anderen Modulen importiert und aufgerufen werden.
 
 
@@ -407,7 +411,7 @@ werden Funktionen als *public* deklariert und können aus anderen Modulen import
 // src/lib.rs
 fn base_function() {
     module_a::function_a1();
-    // Does not compile, because function_a1 is not public!
+    // Does not compile, because function_a2 is not public!
     module_a::function_a2();
 }
 
@@ -425,9 +429,8 @@ mod module_a {
 
 ---
 
-Es ist auch möglich ein Sub-Modul in einer Anderen Datei zu definieren. Das macht größere Projekte 
-übersichtlicher. Im folgenden Beispiel werden die beiden Funktionen `function_b1` und `function_b2` im
-submodul `module_b` definiert.
+Es ist auch möglich ein Sub-Modul in einer anderen Datei zu definieren. Das macht größere Projekte 
+übersichtlicher:
 
 ``` rust
 // src/module_b.rs
@@ -435,7 +438,7 @@ pub fn function_b1(){}
 pub fn function_b2(){}
 ```
 
-Um das Modul in einem andern Modul zu nutzen muss einfach nur der Pfad zur Datei angegeben werden:
+Um das Modul in einem andern Modul zu nutzen muss der Pfad zur Datei angegeben werden:
 
 ``` rust
 // src/lib.rs
@@ -465,16 +468,14 @@ pub fn base_function(){
     module_a::function_a2();
     module_b::function_b();
 }
-
 ```
+
+---
 
 ## Use Keyword
 
 Damit nicht immer der gesamte Pfad zu einem Element eines Modules angegeben werden muss, können Pfade 
-auch mit Hilfe des `use` keywords importiert werden.
-
-Beispielsweise lassen sich `module_a::function_a1` importieren und die Funktion `function_a1` kann 
-dann direkt und ohne Angabe des Modulpfades aufgerufen werden:
+auch mit Hilfe des `use` keywords eingebunden werden:
 
 ``` rust
 // src/lib.rs
@@ -497,7 +498,7 @@ pub fn base_function(){
 
 Alle Open-Source Bibliotheken befinden sich auf [crates.io](https://crates.io/).
 
-Abhängikeiten können in der `Cargo.toml` Datei definier werden:
+Abhängikeiten können in der `Cargo.toml`-Datei definiert werden:
 
 ``` toml
 [dependencies]
@@ -508,9 +509,8 @@ Für Abhängikeiten wird [Semantic Versioning](https://semver.org/lang/de/) verw
 
 ---
  
-Es können auch Wildcards bei den Versionen verwendet werden. 
-Beispielsweise wird im folgenden Beispiel eine beliebige Versionen der 
-Bibliothek [wildmatch](https://crates.io/crates/wildmatch) eingebunden:
+Es können auch Wildcards für die Versionsnummern verwendet werden. So kann auch immer die aktuellste Versionen
+eine Bibliothek (in dem folgenden Beispiel [wildmatch](https://crates.io/crates/wildmatch)) eingebunden werden:
 
 ``` toml
 [dependencies]
@@ -520,7 +520,7 @@ wildmatch = "*"
 --- 
 
 Externe *crates* können mit dem keyword `use` in einem Modul genutzt werden. 
-Der Pfad zum SubModul bzw. Funktion wird mit `::` angegeben. Zum Beispiel:
+Der Pfad zum SubModul bzw. Funktion wird mit `::` angegeben:
 
 ``` rust
 use std::io::{stdin, stdout};
@@ -550,20 +550,15 @@ Hier werden die beiden Funktionen des *io crates* `stdin()` und `stdout()` einge
 ---
 
 ## Tests
-
-Cargo liefert Standardmäßig eine Testumgebung zum einfachen schreiben und Ausführen von *Unit-Tests*. 
-
-Funktionen welche mit dem Makro `#[test]` annotiert sind werden als Tests ausgeführt.
+ 
+Funktionen welche mit dem Makro `#[test]` annotiert sind werden als Tests ausgeführt:
 
 ``` rust
-pub fn deep_thought()->u32{
-    42
-}
+pub fn deep_thought()->u32 { 42 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
     #[test]
     fn the_answer_is_correct() {
         assert_eq!(deep_thought(), 42);
@@ -571,7 +566,7 @@ mod tests {
 }
 ```
 
-Alle Unit tests eines *crates* lassen sich mit dem aufruf `cargo test` ausführen.
+Alle *Unit-Tests* eines *crates* lassen sich mit dem aufruf `cargo test` ausführen.
 
 <Notes>
 
@@ -584,8 +579,9 @@ Alle Unit tests eines *crates* lassen sich mit dem aufruf `cargo test` ausführe
 
 ## Docs
 
-Für jede Bibliothek auf [crates.io](https://crates.io/) wird automatisch eine Dokumentation auf [docs.rs](https://docs.rs/) veröffentlicht.
-Code kann mit drei slashes markiert werden. Cargo erstellt daraus dann eine HTML-Dokumentation.
+Für jede Bibliothek auf [crates.io](https://crates.io/) wird automatisch eine Dokumentation 
+auf [docs.rs](https://docs.rs/) veröffentlicht. Cargo erstellt aus Dokumentiertem Code 
+eine HTML-Dokumentation:
 
 ``` rust
 /// Add two numbers and return the result
@@ -594,7 +590,7 @@ fn add(n1: u32, n2: u32) -> u32 {
 }
 ```
 
-Die Doku für den Eigenen *crate* und alle Abhängikeiten kann mit dem folgenden Kommando erstellt werden:
+Die Doku für *crates* und alle Abhängikeiten kann mit dem folgenden Befehl erstellt werden:
 
 ```sh
 cargo doc --open
@@ -604,14 +600,9 @@ cargo doc --open
 
 ## Tests in der Dokumentation
 
-Ein weites Feature von Rust ist es, Tests auch direkt in der Dokumentation einer Funktion zu schreiben. Der
-Vorteil ist, dass diese Tests dann teil der Dokumentation werden und dem Nutzer Beispiele an die Hand geben 
-wie sich der Code aufrufen läst. 
-
-Falls sich die Bibliothek einmal ändern sollte und auch die Tests angepasst
-werden müssen, dann fällt das sofort auf weil die Unit-Tests rot sind. Nicht funktionierenden Code-Beispiele in der Dokumentation gehören somit (hoffentlich!) der Vergangenheit an.
-
-Test können als *Markdown-Code* in der Dokumentation beschrieben werden:
+*Unit-Tests* lassen sich auch direkt in der Code-Dokumentation schreiben. Der
+Vorteil ist, dass diese Tests dann Teil der Dokumentation werden und dem Nutzer Beispiele an die Hand geben 
+wie sich der Code aufrufen lässt:
 
 ``` rust 
 /// Answer the meaning of life
@@ -623,10 +614,15 @@ Test können als *Markdown-Code* in der Dokumentation beschrieben werden:
 /// #use deep_thought::think;
 /// assert_eq!(think("How old is the universe?"), 42);
 /// ```
-fn think(_question : &str)->u32{
-    42
-}
+fn think(_question : &str)->u32 { 42 }
 ```
+
+<Notes>
+
+- Falls die Bibliothek sich ändert, dann fällt das sofort auf weil die Unit-Tests rot sind
+- Nicht funktionierenden Code-Beispiele in der Dokumentation gehören somit (hoffentlich!) der Vergangenheit an.
+
+</Notes>
 
 ---
 
@@ -639,7 +635,7 @@ fn think(_question : &str)->u32{
 
 ---
 
-# Ownership und der Borrowchecker
+# Ownership
 
 --- 
 
@@ -660,7 +656,7 @@ Rust bietet einen anderen neuen Lösungsansatz der sich **Ownership** nennt.
 ## Garbage Collection
 
 Ein Mechanismus welcher für viele Programmiersprachen (e.g. *Java*, *C#*, *Python*,...) umgesetzt ist, ist der sogenannte 
-*Garbage Collector*. Damit ist ein stück code gemeint, das zur Laufzeit prüft, ob ein Speicherbereich
+*Garbage Collector*. Damit ist ein Code gemeint, das zur Laufzeit prüft, ob ein Speicherbereich
 auf dem *Heap* verwendet wird und falls nicht, diese Resourcen wieder für andere Prozesse freigibt.
 
 * (+) Einfach
@@ -670,10 +666,9 @@ auf dem *Heap* verwendet wird und falls nicht, diese Resourcen wieder für ander
 
 ## Alloc und Free
 
-Eine andere Möglichkeit ist es, dass die Verantwortung des Speichermanagement komplett an den Entwickler/ 
-die Entwicklerin abgegeben wird. In der Programmiersprache *C* beispielsweise wird Speicher auf dem
-Heap mittels `malloc` bzw. `calloc` reserviert und muss später mittels des `free` aufrufs wieder 
-explizit freigeben werden. 
+Eine andere Möglichkeit ist es, die Verantwortung des Speichermanagement komplett an den Entwickler/ 
+die Entwicklerin abzugeben. In *C* beispielsweise wird Speicher auf dem Heap mittels `malloc` bzw. `calloc` 
+reserviert und muss später mittels des `free` aufrufs wieder explizit freigeben werden. 
 
 Problematisch wird es, wenn vergessen wird Speicher freizugeben und immer wieder neuer Speicherplatz 
 reserviert wird (*memory leak*), oder falls versehentlich bereits freigebener Speicher erneut 
@@ -687,11 +682,11 @@ freigeben wird (*double free*)
 ## Ownership
 
 Rust wird als Systemprogrammiersprache bezeichnet und bietet ähnlich wie *C++* oder *C* große 
-Freiheiten beim Speichermanagement, ohne auf Performanceeinbusende Mechanismen wie einen 
+Freiheiten beim Speichermanagement, ohne auf Laufzeitmechanismen wie einen 
 *Garbage Collector* zu setzen.
 
-Bei Rust wird bereits beim Kompieren geprüft, ob es zu eventuellen Speicheroblemen kommt. Es müssen 
-nur drei einfache Regeln befolgt werden, damit ein Programm das Prinzpi des *Ownerships* nicht verletzt.
+Bei Rust wird bereits beim Programmüberseten geprüft, ob es zu eventuellen Speicheroblemen kommt. 
+Es müssen drei einfache Regeln befolgt werden, damit ein Programm das Prinzip des *Ownerships* nicht verletzt.
 Aus [dem rust Buch](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html):
 
 > - *Each value in Rust has a variable that’s called its owner.*
@@ -716,7 +711,7 @@ Der *Owner* einer Variable ist für den Speicherbereich auf dem Heap Zuständig.
 |---------|      | idx  | val |
 |ptr 0x33 |----->| 0x33 |   1 |
 |len   3  |      | 0x34 |   2 |
-|cap   3  |      | 0x35 |   2 |
+|cap   3  |      | 0x35 |   3 |
 |---------|      | _____|_____|
 ```
 
@@ -730,23 +725,52 @@ let owner = vec![1, 2, 3];
 // (len, capacity, pointer) be coppied to the new owner, but also the "old" owner can't 
 // access the vector element anymore. The value was *moved*.
 let new_owner = owner;
-// This does not work! The
-// println!("{}", owner[0])
 // This works just fine. new_owner now *ownes* the memory on the heap
 println!("{}", new_owner[0])
+// This does not work! Owner does not own the memory anymore 
+println!("{}", owner[0])
 ```
+
+*Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
+mittels `clone()` dubliziert werden. 
 
 ---
 
 *Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
-mittels der `clone()` Funktion dubliziert werden. 
+mittels der `clone()` Funktion dubliziert werden.
+
+``` rust
+fn main(){
+    let owner = vec![1, 2, 3];
+    let new_owner = owner;
+    println!("{}", owner[0]);
+    // error[E0382]: borrow of moved value: `owner`
+    //  --> src/main.rs:5:20
+    //   |
+    // 3 |     let owner = vec![1, 2, 3];
+    //   |         ----- move occurs because `owner` has type `std::vec::Vec<i32>`, 
+    //   |               which does not implement the `Copy` trait
+    // 4 |     let new_owner = owner;
+    //   |                     ----- value moved here
+    // 5 |     println!("{}", owner[0]);
+    //   |                    ^^^^^ value borrowed here after move
+    // }
+```
+
+<Notes>
+    - Oder (natürlich) referenzen nutzen (spreng Zeitlichen Rahmen)
+</Notes>
+
+---
+
+*When the owner goes out of scope, the value will be dropped.*
 
 ```
    owner          ______ _____
 |---------|      | idx  | val |
 |ptr 0x33 |----->| 0x33 |   1 |
 |len   3  |  |   | 0x34 |   2 |
-|cap   3  |  |   | 0x35 |   2 |
+|cap   3  |  |   | 0x35 |   3 |
 |---------|  |   | _____|_____|
              |
              |
@@ -758,40 +782,8 @@ mittels der `clone()` Funktion dubliziert werden.
 |---------|
 ```
 
-Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und falls eine der beiden Variable *out-of-scope* geht, müsste der 
-Speicherbereich freigegeben werden.
-
----
-
-### Owner
-
-*When the owner goes out of scope, the value will be dropped.*
-
-``` rust
-fn main(){
-    let owner = vec![1, 2, 3];
-    // Give ownership to print function
-    printFirst(owner);
-    // This does not work and will not compile! Memory is no longer available.
-    printFirst(owner);
-    //  error[E0382]: use of moved value: `owner`
-    // --> src/main.rs:7:16
-    //  |
-    //4 |     let owner = vec![1, 2, 3];
-    //  |         ----- move occurs because `owner` has type `std::vec::Vec<u32>`, 
-    //  |               which does not implement the `Copy` trait
-    //5 |     // Give the ownershipt to the print function
-    //6 |     printFirst(owner);
-    //  |                ----- value moved here
-    //7 |     printFirst(owner);
-    //  |                ^^^^^ value used here after move
-}
-
-fn printFirst(val : Vec<u32>){ println!("{}", val[0]); }
-```
-
-*Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
-mittels der `clone()` Funktion dubliziert werden.
+Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und falls eine der beiden Variable 
+*out-of-scope* geht, müsste der Speicherbereich freigegeben werden.
 
 ---
 
@@ -801,9 +793,9 @@ mittels der `clone()` Funktion dubliziert werden.
 - Traits
 - References
 - Generics
-- Macros and Procedural Macros
+- Macros 
+- Procedural Macros
 - Unsafe
-- Traits
 - Iterators & Closures
 - Async/Await
 - Lifetime
@@ -829,9 +821,10 @@ mittels der `clone()` Funktion dubliziert werden.
   * [crates.io](https://crates.io/)
   * [doc.rust-lang.org](https://doc.rust-lang.org/)
 * [Hilfreiche Community](https://www.rust-lang.org/community)
-* [Gute Dokumentation](https://doc.rust-lang.org/edition-guide/introduction.html)
-* Erlernen von wichtigen Techniken die auch für andere Programmiersprachen wichtig sind (Concurrency und Borrow-Checker)
+* [Gute Guides](https://doc.rust-lang.org/edition-guide/introduction.html)
+* Erlernen von wichtigen Techniken die auch für andere Programmiersprachen wichtig sind (*Concurrency* und *Borrow-Checker*)
 * Viele moderene und hilfreiche Sprachfeatures
+* Viele Probleme werden schon beim Übersetzen erkannt 
 
 ---
 
@@ -846,16 +839,16 @@ mittels der `clone()` Funktion dubliziert werden.
 
 [GitHub user becheran](https://github.com/becheran)
 
-- [mlc](https://github.com/becheran/mlc) - Command line tool zum detektieren von kaputten links in Markup-Dateien 
-- [wildmatch](https://github.com/becheran/wildmatch) - Rust library für wildcard string matching
-- [ntest](https://github.com/becheran/ntest) - Rust library mit einigen Hilfsfunktionen für rust tests. Zum Beispiel `TestCases` als prozedurale Makros
+- [mlc](https://github.com/becheran/mlc) - Command line tool prüfen von links in Markup-Dateien 
+- [wildmatch](https://github.com/becheran/wildmatch) - Bibliothek für wildcard string matching
+- [ntest](https://github.com/becheran/ntest) - Bibliothek mit einigen Hilfsfunktionen für tests z.B. `TestCases`.
 - [gut-angebunden.de](http://gut-angebunden.de/) - Web frontend mit rust-backend
 
 <Notes>
 
-- Seit ca. 1 jahr hauptsächlich Rust
+- Seit ca. 1 jahr privat hauptsächlich Rust
 - GutAngebunden noch nicht open Source. GTFS-Daten verarbeitung mit rust schnell und einfach paralellisierbar
-- Freue mich über Issues/Features Wishes/PullRequests
+- Freue mich über Issues/features-wishes/PullRequests
 
 </Notes>
 
