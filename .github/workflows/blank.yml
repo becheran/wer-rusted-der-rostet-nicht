@@ -14,7 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Markup Link Checker (mlc)
-        uses: becheran/mlc@v0.13.10
+        uses: becheran/mlc@v0.13.11
+        with:
+          args: -d
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
