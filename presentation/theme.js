@@ -38,10 +38,11 @@ export default {
     },
     css: {
         // apply any styles to the root element
+        fontWeight: 200
     },
     // custom CSS can be provided to any of the default components:
     heading: {
-        fontWeight: 400
+        fontWeight: 200
     },
     link: {
         textDecoration: 'none',
@@ -53,6 +54,9 @@ export default {
         code,
     },
     styles: {
+        p: {
+            fontSize: '1em',
+        },
         th: {
             padding: '10px',
             color: 'white',

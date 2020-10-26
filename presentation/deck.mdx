@@ -242,7 +242,6 @@ Eine Variable muss explizit mit `mut` annotiert werden, damit sie verändert wer
 ``` rust
 let mut x = 5;
 let x += 3;
-
 ```
 
 <Notes>
@@ -294,7 +293,7 @@ Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
 
 ## Panic und Error
 
-Anders als bei anderen Programmiersprachen gibt es keine *Exceptions* mit *try-catch-Blöcken.
+Anders als bei anderen Programmiersprachen gibt es keine *Exceptions* mit *try-catch-Blöcken*.
 
 Es gibt zwei Arten von Fehler die in Rust Fehlerfälle zu behandlen: `result` und `panic`
 
@@ -302,7 +301,7 @@ Es gibt zwei Arten von Fehler die in Rust Fehlerfälle zu behandlen: `result` un
 
 ### Panic!
 
-Falls `panic` aufgerufen wird, dann gibt es kein zurück mehr. Das Programm bricht ab. Diese Art der Fehlerbehandlung
+Wenn `panic` aufgerufen wird, dann gibt es kein zurück mehr. Das Programm bricht ab. Diese Art der Fehlerbehandlung
 ist hart, macht aber Beispielsweise für Prototypen und Tests Sinn.
 
 ```rust
@@ -331,11 +330,11 @@ Beispielsweise gibt die Funktion `std::fs::File::open` ein `result` zurück das 
 oder einen Fehler beim Öffnen der Datei beinhaltet:
 
 ``` rust
-let f = File::open("hello.txt");
+let result = File::open("hello.txt");
 
-let mut f = match f {
-    Ok(file) => file,
-    Err(e) => ask_for_other_file(),
+match result {
+    Ok(file) => print_file(file),
+    Err(e) => print_error_message(e),
 };
 ```
 
@@ -814,7 +813,8 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
 
 ---
 
-# Zusammenfassung - Warum lohnt es sich rust anzuschauen?
+# Zusammenfassung 
+### Warum lohnt es sich rust anzuschauen?
 
 * Gutes Ökosystem 
   * [cargo](https://doc.rust-lang.org/cargo/) 

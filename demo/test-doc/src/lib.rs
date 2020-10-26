@@ -12,7 +12,7 @@
 /// # Examples
 ///
 /// ```
-///# let answer = doctest::add(1, 2);
+/// let answer = doctest::add(1, 2);
 /// assert_eq!(answer, 3);
 /// ```
 pub fn add(n1: u32, n2: u32) -> u32 {
