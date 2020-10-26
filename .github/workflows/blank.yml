@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@master
       - name: Markup Link Checker (mlc)
         uses: becheran/mlc@v0.13.7
-        working-directory: ${{env.working-directory}}
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
