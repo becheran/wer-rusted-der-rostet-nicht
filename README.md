@@ -1,6 +1,6 @@
-# Developer Week 2020 - Wer rusted, der rostet nicht
+# Developer Week 2021 - Wer rusted, der rostet nicht
 
-[Developer Week 2020](https://www.developer-week.de/) in Nürnberg.
+[Developer Week 2021](https://www.developer-week.de/) in Nürnberg.
 
 [Link zur Präsentation](http://wer-rusted-der-rostet-nicht.surge.sh)
 
