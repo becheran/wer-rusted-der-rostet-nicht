@@ -74,7 +74,7 @@ export const theme = myTheme
 "Rust is an open-source systems programming language that focuses on *speed*, *memory safety* and *parallelism*. 
 Developers are using Rust to create a wide range of new software applications, such as *game engines*, 
 *operating systems*, *file systems*, *browser components* and *simulation engines for virtual reality*."
---[Mozialla](https://research.mozilla.org/rust/) 
+--[Mozilla](https://research.mozilla.org/rust/) 
 
 <Notes>
 
@@ -105,11 +105,11 @@ Developers are using Rust to create a wide range of new software applications, s
 <Notes>
 
 - Nicht bewertend - Eingruppieren
-- Kompiliert nach machinen Architektur
+- Kompiliert nach maschinen Architektur
 - Paketverwaltung go via git and 3rd party
-- Safety between threads - Fearless concurency - https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html
+- Safety between threads - Fearless Concurrency - https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html
 - RMM=raw memory management (e.g. volatile or memory fence).
-- Viele Probleme werden während des Kombilierens gefunden
+- Viele Probleme werden während des Kompilierens gefunden
 
 </Notes>
 
@@ -172,7 +172,7 @@ cargo check
 
 <Notes>
 
-- Feature: Vieles zur Kopmpilierzeit geprüft
+- Feature: Vieles zur Compilezeit geprüft
 - Oft kompilieren!
 
 </Notes>
@@ -193,7 +193,7 @@ cargo run
 cargo build --release
 ```
 
-Das releaste Artefakt ist standardgemäß im Ordner *target* zu finden:
+Das erstellte Artefakt ist standardgemäß im Ordner *target* zu finden:
 
 ``` sh
 ./target/release/hello-world
@@ -226,14 +226,14 @@ Das releaste Artefakt ist standardgemäß im Ordner *target* zu finden:
 
 ---
 
-## Standardmäßig Imutable 
+## Standardmäßig Immutable 
 
 Alle Variablen werden standardgemäß als *immutable* deklariert.
 
 ``` rust
 let x = 5;
 // This does not work. The compiler will not let us do this
-// cannot assign twice to immutable variablerustc(E0384)
+// cannot assign twice to immutable variable rustc(E0384)
 let x += 3;
 ```
 
@@ -247,7 +247,7 @@ let x += 3;
 <Notes>
 
 - Anders als C++ *const* wo immutable explizit ist
-- Einfacher zu sehen welche Variablen öfter gebraucht und ewentuel verändert werden
+- Einfacher zu sehen welche Variablen öfter gebraucht und eventuell verändert werden
 
 </Notes>
 
@@ -295,7 +295,7 @@ Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
 
 Anders als bei anderen Programmiersprachen gibt es keine *Exceptions* mit *try-catch-Blöcken*.
 
-Es gibt zwei Arten von Fehler die in Rust Fehlerfälle zu behandlen: `result` und `panic`
+Fehlerfälle können in Rust auf zwei Arten behandelt werden: `result` und `panic`
 
 ---
 
@@ -356,7 +356,7 @@ pub enum Option<T> {
 ---
 
 Falls ein Wert als `Option` definiert ist, kann nicht direkt auf diesen zugegriffen, sondern 
-es muss erst expliziet geprüft werden, ob es sich um den Wert oder um ein `None` handelt:
+es muss erst explizit geprüft werden, ob es sich um den Wert oder um ein `None` handelt:
 
 ``` rust    
 let maybe_nothing : Option<u32> = Some(4); // print: 4
@@ -402,7 +402,7 @@ mod module_a {
 
 ## Private und Public
 
-standardgemäß sind alle Elemente in einem Modul *private*. Erst mit dem Hinpufügen des `pub`-Keywords 
+standardgemäß sind alle Elemente in einem Modul *private*. Erst mit dem Hinzufügen des `pub`-Keywords 
 werden Funktionen als *public* deklariert und können aus anderen Modulen importiert und aufgerufen werden.
 
 
@@ -497,14 +497,14 @@ pub fn base_function(){
 
 Alle Open-Source Bibliotheken befinden sich auf [crates.io](https://crates.io/).
 
-Abhängikeiten können in der `Cargo.toml`-Datei definiert werden:
+Abhängigkeiten können in der `Cargo.toml`-Datei definiert werden:
 
 ``` toml
 [dependencies]
 ntest = "0.7.1"
 ```
 
-Für Abhängikeiten wird [Semantic Versioning](https://semver.org/lang/de/) verwendet.
+Für Abhängigkeiten wird [Semantic Versioning](https://semver.org/lang/de/) verwendet.
 
 ---
  
@@ -589,7 +589,7 @@ fn add(n1: u32, n2: u32) -> u32 {
 }
 ```
 
-Die Doku für *crates* und alle Abhängikeiten kann mit dem folgenden Befehl erstellt werden:
+Die Doku für *crates* und alle Abhängigkeiten kann mit dem folgenden Befehl erstellt werden:
 
 ```sh
 cargo doc --open
@@ -646,7 +646,7 @@ mit dem Problem der Speicherallozierung und Freigabe umzugehen.
 
 1. Speicher mittels **Garbage Collection** von der Laufzeitumgebung automatisch freigeben.
 2. Die Verantwortung des Speichermanagement an den Programmierer/die Programmiererin abgeben 
-die **explizit Speicher alloziieren und freigeben** müssen.
+die **explizit Speicher allozieren und freigeben** müssen.
 
 Rust bietet einen anderen neuen Lösungsansatz der sich **Ownership** nennt. 
 
@@ -656,7 +656,7 @@ Rust bietet einen anderen neuen Lösungsansatz der sich **Ownership** nennt.
 
 Ein Mechanismus welcher für viele Programmiersprachen (e.g. *Java*, *C#*, *Python*,...) umgesetzt ist, ist der sogenannte 
 *Garbage Collector*. Damit ist ein Code gemeint, das zur Laufzeit prüft, ob ein Speicherbereich
-auf dem *Heap* verwendet wird und falls nicht, diese Resourcen wieder für andere Prozesse freigibt.
+auf dem *Heap* verwendet wird und falls nicht, diese Ressourcen wieder für andere Prozesse freigibt.
 
 * (+) Einfach
 * (-) Schlechtere Performance
@@ -670,7 +670,7 @@ die Entwicklerin abzugeben. In *C* beispielsweise wird Speicher auf dem Heap mit
 reserviert und muss später mittels des `free` aufrufs wieder explizit freigeben werden. 
 
 Problematisch wird es, wenn vergessen wird Speicher freizugeben und immer wieder neuer Speicherplatz 
-reserviert wird (*memory leak*), oder falls versehentlich bereits freigebener Speicher erneut 
+reserviert wird (*memory leak*), oder falls versehentlich bereits freigegebener Speicher erneut 
 freigeben wird (*double free*)
 
 * (+) Mehr Kontrolle -> Eventuell Performanter
@@ -684,7 +684,7 @@ Rust wird als Systemprogrammiersprache bezeichnet und bietet ähnlich wie *C++* 
 Freiheiten beim Speichermanagement, ohne auf Laufzeitmechanismen wie einen 
 *Garbage Collector* zu setzen.
 
-Bei Rust wird bereits beim Programmüberseten geprüft, ob es zu eventuellen Speicheroblemen kommt. 
+Bei Rust wird bereits beim Übersetzen des Programms geprüft, ob es zu eventuellen Speicherproblemen kommt. 
 Es müssen drei einfache Regeln befolgt werden, damit ein Programm das Prinzip des *Ownerships* nicht verletzt.
 Aus [dem rust Buch](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html):
 
@@ -721,7 +721,7 @@ Der *Owner* einer Variable ist für den Speicherbereich auf dem Heap Zuständig.
 ``` rust
 let owner = vec![1, 2, 3];
 // The new owner takes the ownership away of owner. Not only will the tuple on the stack 
-// (len, capacity, pointer) be coppied to the new owner, but also the "old" owner can't 
+// (len, capacity, pointer) be copied to the new owner, but also the "old" owner can't 
 // access the vector element anymore. The value was *moved*.
 let new_owner = owner;
 // This works just fine. new_owner now *ownes* the memory on the heap
@@ -731,12 +731,9 @@ println!("{}", owner[0])
 ```
 
 *Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
-mittels `clone()` dubliziert werden. 
+mittels `clone()` dupliziert werden. 
 
 ---
-
-*Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
-mittels der `clone()` Funktion dubliziert werden.
 
 ``` rust
 fn main(){
@@ -806,7 +803,7 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
 - Traits anstelle von Interfaces
 - Nicht alles behandelt (natürlich)
 - Rustbook
-- Selbst coden
+- Selbst programming
 - Sehr umfangreich
 
 </Notes>
@@ -823,7 +820,7 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
 * [Hilfreiche Community](https://www.rust-lang.org/community)
 * [Gute Guides](https://doc.rust-lang.org/edition-guide/introduction.html)
 * Erlernen von wichtigen Techniken die auch für andere Programmiersprachen wichtig sind (*Concurrency* und *Borrow-Checker*)
-* Viele moderene und hilfreiche Sprachfeatures
+* Viele moderne und hilfreiche Sprachfeatures
 * Viele Probleme werden schon beim Übersetzen erkannt 
 
 ---
@@ -847,7 +844,7 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
 <Notes>
 
 - Seit ca. 1 jahr privat hauptsächlich Rust
-- GutAngebunden noch nicht open Source. GTFS-Daten verarbeitung mit rust schnell und einfach paralellisierbar
+- GutAngebunden noch nicht open Source. GTFS-Daten verarbeitung mit rust schnell und einfach parallelisierbar
 - Freue mich über Issues/features-wishes/PullRequests
 
 </Notes>
