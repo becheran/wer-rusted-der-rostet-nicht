@@ -24,6 +24,7 @@ export const theme = myTheme
 
 - Warum Rust?
 - Was ist Rust?
+- Eigne Projekte mit Rust
 - Getting Started
 - Basics
 - Projektstruktur
@@ -128,6 +129,26 @@ Developers are using Rust to create a wide range of new software applications, s
 
 ---
 
+## Eigene Projekte
+
+[GitHub user becheran](https://github.com/becheran)
+
+- [mlc](https://github.com/becheran/mlc) - Command line tool prüfen von links in Markup-Dateien
+- [wildmatch](https://github.com/becheran/wildmatch) - Bibliothek für wildcard string matching
+- [fast-hilbert](https://github.com/becheran/fast-hilbert) - Bibliothek zur sehr effizienten Berechnung der Hilbert-Kurve
+- [ntest](https://github.com/becheran/ntest) - Bibliothek mit einigen Hilfsfunktionen für tests z.B. `TestCases`.
+- [gut-angebunden.de](http://gut-angebunden.de/) - Web frontend mit rust-backend
+
+<Notes>
+
+- Seit ca. 1 jahr privat hauptsächlich Rust
+- GutAngebunden noch nicht open Source. GTFS-Daten verarbeitung mit rust schnell und einfach parallelisierbar
+- Freue mich über Issues/features-wishes/PullRequests
+
+</Notes>
+
+---
+
 # Getting Started
 
 ---
@@ -144,7 +165,6 @@ Offizieller Paketmanager für rust.
   - *C#*: `NuGet`/`dotnet`
   - *pip*: *Python*
   - *Node*: `npm`
-- Viele nützliche Informationen zum nachschlagen
 
 </Notes>
 
@@ -201,7 +221,7 @@ Das erstellte Artefakt ist standardgemäß im Ordner *target* zu finden:
 
 --- 
 
-# Demo Hello World
+# 👨‍💻 Hello World 👨‍💻
 
 <Notes>
 
@@ -211,6 +231,8 @@ Das erstellte Artefakt ist standardgemäß im Ordner *target* zu finden:
 - cargo build
 - cargo run
 - cargo build --release; ./target/release/hello-world
+- Cross compile `rustup target list`
+- https://rust-lang.github.io/rustup/cross-compilation.html
 
 </Notes>
 
@@ -287,7 +309,7 @@ Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
 
 ---
 
-# Beispiel Enum-Match
+# 👨‍💻 Enum-Match 👨‍💻
 
 ---
 
@@ -529,11 +551,11 @@ Hier werden die beiden Funktionen des *io crates* `stdin()` und `stdout()` einge
 
 ---
 
-# Demo Dependencies
+# 👨‍💻 Dependencies 👨‍💻
 
 <Notes>
 
-- Show dependency project with TOML file
+- Abhängigkeiten im TOML File
 - Dev dependencies
 - Path from module (mod keyword)
 - Move module to different file
@@ -570,6 +592,7 @@ Alle *Unit-Tests* eines *crates* lassen sich mit dem aufruf `cargo test` ausfüh
 <Notes>
 
 - #[cfg(test)] -> Kompiliere nicht für release sondern nur für tests
+- Tests laufen alle parallel
 - Auch Benchmarks möglich
 
 </Notes>
@@ -625,7 +648,7 @@ fn think(_question : &str)->u32 { 42 }
 
 ---
 
-# Demo Test und Dokumentation
+# 👨‍💻 Test und Dokumentation 👨‍💻
 
 <Notes>
 - cargo test
@@ -810,7 +833,8 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
 
 ---
 
-# Zusammenfassung 
+# Zusammenfassung
+
 ### Warum lohnt es sich rust anzuschauen?
 
 * Gutes Ökosystem 
@@ -829,25 +853,6 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
 
 - [Go vs Rust](https://endler.dev/2017/go-vs-rust/)
 - [Fighting the Borrow Checker](https://m-decoster.github.io/2017/01/16/fighting-borrowchk/)
-
----
-
-## Eigene Projekte
-
-[GitHub user becheran](https://github.com/becheran)
-
-- [mlc](https://github.com/becheran/mlc) - Command line tool prüfen von links in Markup-Dateien 
-- [wildmatch](https://github.com/becheran/wildmatch) - Bibliothek für wildcard string matching
-- [ntest](https://github.com/becheran/ntest) - Bibliothek mit einigen Hilfsfunktionen für tests z.B. `TestCases`.
-- [gut-angebunden.de](http://gut-angebunden.de/) - Web frontend mit rust-backend
-
-<Notes>
-
-- Seit ca. 1 jahr privat hauptsächlich Rust
-- GutAngebunden noch nicht open Source. GTFS-Daten verarbeitung mit rust schnell und einfach parallelisierbar
-- Freue mich über Issues/features-wishes/PullRequests
-
-</Notes>
 
 ---
 
