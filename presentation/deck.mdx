@@ -29,9 +29,9 @@ export const theme = myTheme
 - Basics
 - Projektstruktur
 - Test und Dokumentation
+- Ownership
 - Weitere Konzepte
 - Zusammenfassung
-- Links
 
 ---
 
@@ -136,7 +136,7 @@ Developers are using Rust to create a wide range of new software applications, s
 - [mlc](https://github.com/becheran/mlc) - Command line tool prüfen von links in Markup-Dateien
 - [wildmatch](https://github.com/becheran/wildmatch) - Bibliothek für wildcard string matching
 - [fast-hilbert](https://github.com/becheran/fast-hilbert) - Bibliothek zur sehr effizienten Berechnung der Hilbert-Kurve
-- [ntest](https://github.com/becheran/ntest) - Bibliothek mit einigen Hilfsfunktionen für tests z.B. `TestCases`.
+- [ntest](https://github.com/becheran/ntest) - Bibliothek mit einigen Hilfsfunktionen für tests z.B. `TestCases`
 - [gut-angebunden.de](http://gut-angebunden.de/) - Web frontend mit rust-backend
 
 <Notes>
@@ -304,8 +304,7 @@ let binary = match boolean {
 
 ---
 
-Ein weiterer Vorteil der `match` Operation ist, dass **zur Compilezeit geprüft** wird, ob alle 
-Optionen behandelt wurden. Falls nicht, lässt sich der Code nicht kompilieren.
+Ob alle Optionen der `match` Operation behandelt wurden wird **zur Compilezeit geprüft**
 
 ---
 
@@ -421,7 +420,7 @@ mod module_a {
 ```
 
 ---
-
+<!-- 
 ## Private und Public
 
 standardgemäß sind alle Elemente in einem Modul *private*. Erst mit dem Hinzufügen des `pub`-Keywords 
@@ -448,8 +447,9 @@ mod module_a {
 
 </Notes>
 
----
+--- -->
 
+<!-- 
 Es ist auch möglich ein Sub-Modul in einer anderen Datei zu definieren. Das macht größere Projekte 
 übersichtlicher:
 
@@ -514,7 +514,7 @@ pub fn base_function(){
 </Notes>
 
 ---
-
+ -->
 ## Externe Bibliotheken
 
 Alle Open-Source Bibliotheken befinden sich auf [crates.io](https://crates.io/).
@@ -523,12 +523,12 @@ Abhängigkeiten können in der `Cargo.toml`-Datei definiert werden:
 
 ``` toml
 [dependencies]
-ntest = "0.7.1"
+wildmatch = "2.1.0"
 ```
 
 Für Abhängigkeiten wird [Semantic Versioning](https://semver.org/lang/de/) verwendet.
 
----
+<!-- ---
  
 Es können auch Wildcards für die Versionsnummern verwendet werden. So kann auch immer die aktuellste Versionen
 eine Bibliothek (in dem folgenden Beispiel [wildmatch](https://crates.io/crates/wildmatch)) eingebunden werden:
@@ -536,8 +536,8 @@ eine Bibliothek (in dem folgenden Beispiel [wildmatch](https://crates.io/crates/
 ``` toml
 [dependencies]
 wildmatch = "*"
-```
-
+``` -->
+<!-- 
 --- 
 
 Externe *crates* können mit dem keyword `use` in einem Modul genutzt werden. 
@@ -562,7 +562,7 @@ Hier werden die beiden Funktionen des *io crates* `stdin()` und `stdout()` einge
 - Packages = Set of Crates
 - pub and private functions
 
-</Notes>
+</Notes> -->
 
 --- 
 
@@ -651,8 +651,8 @@ fn think(_question : &str)->u32 { 42 }
 # 👨‍💻 Test und Dokumentation 👨‍💻
 
 <Notes>
-- cargo test
-- cargo doc --open
+* cargo test
+* cargo doc --open
 </Notes>
 
 ---
@@ -663,65 +663,80 @@ fn think(_question : &str)->u32 { 42 }
 
 ## Speichermanagement
 
-Eines der wichtigesten Konzepte von Rust ist *Ownership*, welches das Problem der 
-Speicherfreigabe auf dem Heap löst. Grundlegend gibt es zwei sehr weit verbreitete Ansätze um 
-mit dem Problem der Speicherallozierung und Freigabe umzugehen. 
+Es zwei sehr weit verbreitete Ansätze um mit dem Problem der Speicherallozierung und Freigabe umzugehen:
 
 1. Speicher mittels **Garbage Collection** von der Laufzeitumgebung automatisch freigeben.
-2. Die Verantwortung des Speichermanagement an den Programmierer/die Programmiererin abgeben 
-die **explizit Speicher allozieren und freigeben** müssen.
+2. Die Verantwortung an Programmierer*innen abgeben, die **explizit Speicher allozieren und freigeben** müssen.
 
 Rust bietet einen anderen neuen Lösungsansatz der sich **Ownership** nennt. 
+
+<Notes>
+- Ownership ist ein Konzpet, welches Speicherfreigabe auf dem Heap löst.
+</Notes>
 
 ---
 
 ## Garbage Collection
 
-Ein Mechanismus welcher für viele Programmiersprachen (e.g. *Java*, *C#*, *Python*,...) umgesetzt ist, ist der sogenannte 
-*Garbage Collector*. Damit ist ein Code gemeint, das zur Laufzeit prüft, ob ein Speicherbereich
-auf dem *Heap* verwendet wird und falls nicht, diese Ressourcen wieder für andere Prozesse freigibt.
+Es wird zur Laufzeit geprüft, ob ein Speicherbereich auf dem *Heap* verwendet wird. 
+
+Falls nicht, wird diese Ressourcen wieder für andere Prozesse freigegeben.
 
 * (+) Einfach
 * (-) Schlechtere Performance
+
+<Notes>
+- (e.g. *Java*, *C#*, *Python*,...) 
+
+</Notes>
 
 ---
 
 ## Alloc und Free
 
-Eine andere Möglichkeit ist es, die Verantwortung des Speichermanagement komplett an den Entwickler/ 
-die Entwicklerin abzugeben. In *C* beispielsweise wird Speicher auf dem Heap mittels `malloc` bzw. `calloc` 
-reserviert und muss später mittels des `free` aufrufs wieder explizit freigeben werden. 
+Die Verantwortung des Speichermanagement kann auch komplett an Entwickler*innen abgegeben werden. 
 
-Problematisch wird es, wenn vergessen wird Speicher freizugeben und immer wieder neuer Speicherplatz 
-reserviert wird (*memory leak*), oder falls versehentlich bereits freigegebener Speicher erneut 
-freigeben wird (*double free*)
+In *C* wird Speicher auf dem Heap via `malloc` bzw. `calloc` reserviert und muss mittels `free` explizit freigeben werden. 
 
-* (+) Mehr Kontrolle -> Eventuell Performanter
+Probleme: 
+
+- Speicher wird vergessen freizugeben (*memory leak*)
+- Bereits freigegebener Speicher wird erneut freigeben (*double free*)
+
+---
+
+## Alloc und Free
+
+* (+) Mehr Kontrolle 
+* (+) Eventuell Performanter
 * (-) Fehleranfällig
 
 ---
 
 ## Ownership
 
-Rust wird als Systemprogrammiersprache bezeichnet und bietet ähnlich wie *C++* oder *C* große 
-Freiheiten beim Speichermanagement, ohne auf Laufzeitmechanismen wie einen 
-*Garbage Collector* zu setzen.
+Rust bietet große Freiheiten beim Speichermanagement, ohne *Garbage Collector*
 
-Bei Rust wird bereits beim Übersetzen des Programms geprüft, ob es zu eventuellen Speicherproblemen kommt. 
-Es müssen drei einfache Regeln befolgt werden, damit ein Programm das Prinzip des *Ownerships* nicht verletzt.
-Aus [dem rust Buch](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html):
+*Beim Übersetzen des Programms* wird geprüft, ob es zu eventuellen Speicherproblemen kommt
 
-> - *Each value in Rust has a variable that’s called its owner.*
-> - *There can only be one owner at a time.*
-> - *When the owner goes out of scope, the value will be dropped.*
+Es müssen drei Regeln befolgt werden, damit ein Programm das Prinzip des *Ownerships* nicht verletzt:
+
+- *Each value in Rust has a variable that’s called its owner*
+- *There can only be one owner at a time*
+- *When the owner goes out of scope, the value will be dropped*
+
+<Notes>
+- ähnlich wie *C++* oder *C* 
+- Wird als *Systemprogrammiersprache* bezeichnet
+- Keine Laufzeitmechanismen
+- Aus [dem rust Buch](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html):
+</Notes>
 
 ---
 
-*Each value in Rust has a variable that’s called its owner.*
+*Each value in Rust has a variable that’s called its owner*
 
 ``` rust
-// Owner variable contains the vector parameters on the stack (len, capacity, pointer).
-// Is also responsible for the Allocated Memory on the heap.
 let owner = vec![1, 2, 3];
 ```
 
@@ -737,26 +752,36 @@ Der *Owner* einer Variable ist für den Speicherbereich auf dem Heap Zuständig.
 |---------|      | _____|_____|
 ```
 
+<Notes>
+- Owner variable contains the vector parameters on the stack (len, capacity, pointer).
+- Is responsible for the Allocated Memory on the heap.
+</Notes>
+
 ---
 
-*There can only be one owner at a time.*
+*There can only be one owner at a time*
 
 ``` rust
 let owner = vec![1, 2, 3];
-// The new owner takes the ownership away of owner. Not only will the tuple on the stack 
-// (len, capacity, pointer) be copied to the new owner, but also the "old" owner can't 
-// access the vector element anymore. The value was *moved*.
+// Besitz wir an new_owner weitergegeben
 let new_owner = owner;
-// This works just fine. new_owner now *ownes* the memory on the heap
 println!("{}", new_owner[0])
-// This does not work! Owner does not own the memory anymore 
+// Compiler Fehler! Variable *owner* besitzt den Speicher nicht mehr 
 println!("{}", owner[0])
 ```
 
 *Ownership* kann nur abgegeben werden (*move*), oder das gesamte Objekt auf dem Heap muss explizit
 mittels `clone()` dupliziert werden. 
 
+<Notes>
+- The new owner takes the ownership away of owner. Not only will the tuple on the stack 
+- (len, capacity, pointer) be copied to the new owner, but also the "old" owner can't 
+- access the vector element anymore. The value was *moved*.
+</Notes>
+
 ---
+
+*There can only be one owner at a time*
 
 ``` rust
 fn main(){
@@ -777,12 +802,12 @@ fn main(){
 ```
 
 <Notes>
-    - Oder (natürlich) referenzen nutzen (spreng Zeitlichen Rahmen)
+- Oder (natürlich) referenzen nutzen (spreng Zeitlichen Rahmen)
 </Notes>
 
 ---
 
-*When the owner goes out of scope, the value will be dropped.*
+*When the owner goes out of scope, the value will be dropped*
 
 ```
    owner          ______ _____
@@ -801,14 +826,31 @@ fn main(){
 |---------|
 ```
 
-Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und falls eine der beiden Variable 
-*out-of-scope* geht, müsste der Speicherbereich freigegeben werden.
+<Notes>
+- Auto *free* via scoping
+- Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und falls eine der beiden Variable *out-of-scope* geht, müsste der Speicherbereich freigegeben werden.
+</Notes>
+
+---
+
+## Ownership
+
+- *Each value in Rust has a variable that’s called its owner*
+- *There can only be one owner at a time*
+- *When the owner goes out of scope, the value will be dropped*
+
+<Notes>
+- Nur drei *einfache* Regeln nötig fürs Speichermanagement
+- Zur Compilezeit geprüft 
+- Kein Garbage Collector 
+</Notes>
 
 ---
 
 # Weitere Features
 
 - Structs und Member Funktionen
+- Enums
 - Traits
 - References
 - Generics
@@ -841,20 +883,20 @@ Beide Variablen würden sonst auf den selben Bereich im Speicher zeigen und fall
   * [cargo](https://doc.rust-lang.org/cargo/) 
   * [crates.io](https://crates.io/)
   * [doc.rust-lang.org](https://doc.rust-lang.org/)
-* [Hilfreiche Community](https://www.rust-lang.org/community)
+  * [doc.rust-lang.org](https://doc.rust-lang.org/)
 * [Gute Guides](https://doc.rust-lang.org/edition-guide/introduction.html)
-* Erlernen von wichtigen Techniken die auch für andere Programmiersprachen wichtig sind (*Concurrency* und *Borrow-Checker*)
-* Viele moderne und hilfreiche Sprachfeatures
-* Viele Probleme werden schon beim Übersetzen erkannt 
+* Ownership als fürs Speichermanagement
+* Moderne Sprachfeatures
+* Probleme werden oft beim Übersetzen erkannt 
 
 ---
 
-## Hilfreiche Links
+<!-- ## Hilfreiche Links
 
 - [Go vs Rust](https://endler.dev/2017/go-vs-rust/)
 - [Fighting the Borrow Checker](https://m-decoster.github.io/2017/01/16/fighting-borrowchk/)
 
----
+--- -->
 
 # don't panic
 

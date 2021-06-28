@@ -7,8 +7,9 @@ enum Food {
 
 fn is_healthy(food: Food) -> String {
     match food {
+        Food::Carrot => "Yes".to_string(),
         Food::Apple => "Yes".to_string(),
-        Food::Carrot | Food::Chocolate => "No".to_string(),
+        Food::Chocolate => "No".to_string(),
     }
 }
 
